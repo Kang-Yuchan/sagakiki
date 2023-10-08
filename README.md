@@ -7,10 +7,9 @@
 
 
  ## Tech Stacks
- ```
-    Next.js
-    tailwind.css
-    shadcn/ui
-    Shazam API
- ```
+- Next.js
+- tailwind.css
+-  shadcn/ui
+- Shazam API
+ 
  
