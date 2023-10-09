@@ -1,8 +1,8 @@
 {
-    "title": "SAGAKIKI! | 가사로 노래찾기",
-    "description": "SAGAKIKI!는 가사를 통해서 노래를 찾아주는 웹사이트입니다.",
-    "artist": "아티스트",
-    "musicTitle": "곡명",
-    "placeholder": "가사를 입력해주세요",
-    "search": "검색"
+	"title": "SAGAKIKI! | 가사로 노래찾기",
+	"description": "SAGAKIKI!는 가사를 통해서 노래를 찾아주는 웹사이트입니다.",
+	"artist": "아티스트",
+	"musicTitle": "곡명",
+	"placeholder": "가사를 입력해주세요",
+	"search": "검색"
 }
