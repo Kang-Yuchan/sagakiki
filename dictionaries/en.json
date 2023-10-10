@@ -1,8 +1,6 @@
 {
-	"title": "SAGAKIKI! | Search Music By Lyrics",
-	"description": "SAGAKIKI! is website that lets you search for music by lyrics.",
-	"artist": "Artist",
-	"musicTitle": "Title",
-	"placeholder": "Please enter lyrics",
+	"title": "SAGAKIKI! | Let's search and listen to a music by lyrics.",
+	"description": "SAGAKIKI! is a website where you can search for music by lyrics and listen to the music",
+	"placeholder": "Please enter lyrics or title",
 	"search": "search"
 }

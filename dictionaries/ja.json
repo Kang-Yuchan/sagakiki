@@ -1,8 +1,6 @@
 {
-	"title": "SAGAKIKI! | 歌詞で曲を探す",
-	"description": "SAGAKIKI!は歌詞で曲を探してくれるウェブサイトです。",
-	"artist": "アーティスト",
-	"musicTitle": "曲名",
-	"placeholder": "歌詞を入力してください",
+	"title": "SAGAKIKI! | 歌詞で曲を探して聞いてみる！",
+	"description": "SAGAKIKI!は歌詞で曲を探して、曲を聞けるウェブサイトです。",
+	"placeholder": "歌詞や曲名を入力してください",
 	"search": "検索"
 }
