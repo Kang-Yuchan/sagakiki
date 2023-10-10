@@ -5,11 +5,11 @@ export async function GET(req: NextRequest) {
 	const term = req.nextUrl.searchParams.get('term');
 
 	const res = await axios.get(
-		`${process.env.NEXT_PUBLIC_RAPIDAPI_URL}?term=${term}`,
+		`${process.env.RAPIDAPI_URL}?term=${term}`,
 		{
 			headers: {
 				'x-rapidapi-host': 'shazam.p.rapidapi.com',
-				'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
+				'x-rapidapi-key': process.env.RAPIDAPI_KEY,
 			},
 		},
 	);

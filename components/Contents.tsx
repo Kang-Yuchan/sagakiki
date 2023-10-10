@@ -23,14 +23,15 @@ type SongInfo = {
 export default function Contents({ dic }: ContentsProps) {
 	const [input, setInput] = useState('');
 	const [songInfos, setSongInfos] = useState<SongInfo[]>([]);
+	const [isSearched, setIsSearched] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
 	const pathname = usePathname();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const hitsParam = searchParams.get('hits');
-	const isNotHits = hitsParam === '0';
+	const searchQuery = searchParams.get('q');
 
 	const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
 		const searchInput = e.target.value;
@@ -44,9 +45,8 @@ export default function Contents({ dic }: ContentsProps) {
 
 	const handleSubmit = async () => {
 		try {
-			setSongInfos([]);
 			setIsLoading(true);
-			router.push(pathname);
+			router.push(`${pathname}?q=${input}`);
 			const res = await axios.get('/api/search/', {
 				params: { term: input },
 			});
@@ -62,23 +62,34 @@ export default function Contents({ dic }: ContentsProps) {
 							src: track.hub.actions[1]?.uri,
 						};
 					},
-				);
+				).filter((item, index, array) => {
+					return index === array.findIndex(({ artist }) => artist === item.artist);
+				});
 				setSongInfos(hits);
 			} else {
-				router.push(`${pathname}?hits=0`);
+				setSongInfos([]);
 			}
 			setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
 			console.log(error);
 		}
-	};
+		setIsSearched(true);
+	}
+
+
+	useEffect(() => {
+		if (searchQuery) {
+			setInput(searchQuery);
+		}
+	}, [])
 
 	useEffect(() => {
 		return () => {
 			setSongInfos([]);
 			setIsLoading(false);
 			setInput('');
+			setIsSearched(false);
 		};
 	}, []);
 
@@ -90,7 +101,7 @@ export default function Contents({ dic }: ContentsProps) {
 					onChange={handleChangeInput}
 					onKeyDown={handleKeyDown}
 					value={input}
-					className="text-sm mr-2 text-black max-w-xl"
+					className="text-sm mr-2 text-black max-w-sm"
 					placeholder={dic.placeholder}
 				/>
 				<Button
@@ -103,26 +114,35 @@ export default function Contents({ dic }: ContentsProps) {
 					{!isLoading && dic.search}
 				</Button>
 			</div>
-			{songInfos.length > 0 && !isNotHits && (
-				<>
-					<MusicCard
-						title={songInfos[0].title}
-						artist={songInfos[0].artist}
-						artwork={songInfos[0].imgUrl}
-						audioSrc={songInfos[0].src}
-					/>
-				</>
-			)}
-			{isNotHits && (
-				<div className="rounded-md bg-white mt-5 w-full max-w-4xl flex flex-col items-center overflow-hidden py-4">
-					<Image
-						src={NoResultsImage.src}
-						width={500}
-						height={500}
-						alt="No results image"
-					/>
-					<p className="text-black">No results found</p>
-				</div>
+			{isSearched && (
+				songInfos.length > 0 ? (
+					<div className='flex flex-col items-center'>
+						<MusicCard
+							title={songInfos[selectedIndex].title}
+							artist={songInfos[selectedIndex].artist}
+							artwork={songInfos[selectedIndex].imgUrl}
+							audioSrc={songInfos[selectedIndex].src}
+						/>
+						<span>候補</span>
+						<div className='w-full flex space-x-3'>
+							{songInfos.map(((song, i) => (
+								<button key={i} className="overflow-hidden rounded-md" onClick={() => setSelectedIndex(i)}>
+									<Image width={100} height={100} src={song.imgUrl} alt={song.title} />
+								</button>
+							)))}
+						</div>
+					</div>
+				) : (
+					<div className="bg-white max-w-md mx-auto rounded-xl overflow-hidden shadow-lg relative mt-5">
+						<Image
+							src={NoResultsImage.src}
+							width={500}
+							height={500}
+							alt="No results image"
+						/>
+						<p className="text-black">No results found</p>
+					</div>
+				)
 			)}
 		</>
 	);

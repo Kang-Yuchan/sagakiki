@@ -1,5 +1,6 @@
 'use client';
 
+import { formatDisplayTime } from '@/lib/format';
 import {
 	VolumeX,
 	Volume1,
@@ -30,6 +31,8 @@ export default function MusicCard({
 	const [showVolumeTooltip, setShowVolumeTooltip] = useState<boolean>(false);
 	const [volume, setVolume] = useState<number>(0.5);
 	const [loop, setLoop] = useState<boolean>(false);
+	const [duration, setDuration] = useState<number>(0);
+	const [currentTime, setCurrentTime] = useState<number>(0);
 
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -45,10 +48,18 @@ export default function MusicCard({
 		}
 	};
 
+	const handleLoadedMetadata = () => {
+		const audio = audioRef.current;
+		if (audio) {
+			setDuration(audio.duration);
+		}
+	};
+
 	const handleTimeUpdate = () => {
 		const audio = audioRef.current;
 		if (audio) {
 			setProgress((audio.currentTime / audio.duration) * 100);
+			setCurrentTime(audio.currentTime);
 			if (audio.ended) {
 				setPlaying(false);
 				setProgress(0);
@@ -71,13 +82,21 @@ export default function MusicCard({
 		}
 	};
 
-	useEffect(() => {
+	const handleThumbMouseDown = () => {
 		const audio = audioRef.current;
-		if (audio) {
-			audio.loop = loop;
-			audio.volume = volume;
+		if (audio && playing) {
+			audio.pause();
+			setPlaying(false);
 		}
-	}, [loop]);
+	};
+
+	const handleThumbMouseUp = () => {
+		const audio = audioRef.current;
+		if (audio && !playing) {
+			audio.play();
+			setPlaying(true);
+		}
+	};
 
 	useEffect(() => {
 		const audio = audioRef.current;
@@ -85,7 +104,7 @@ export default function MusicCard({
 			audio.loop = loop;
 			audio.volume = volume;
 		}
-	}, [progress]);
+	}, [loop]);
 
 	const renderVolumeIcon = () => {
 		if (!volume) return <VolumeX />;
@@ -108,24 +127,30 @@ export default function MusicCard({
 				<p className="text-gray-700 text-base">{artist}</p>
 			</div>
 			<div className="px-6 py-4 flex justify-between">
-				<div className="w-full">
+				<div className="w-full flex items-center">
 					<button onClick={togglePlay}>{playing ? <Pause /> : <Play />}</button>
 					<button onClick={() => setLoop(!loop)} className="mx-4">
 						{loop ? <RefreshCw /> : <RefreshCwOff />}
 					</button>
-					<input
-						type="range"
-						value={progress}
-						onChange={handleProgressChange}
-						className="w-1/2"
-					/>
+					<div className='w-full flex items-center'>
+						<span className='text-gray-700 block w-7 text-exsm'>{formatDisplayTime(Math.round(currentTime))}</span>
+						<input
+							type="range"
+							value={progress || 0}
+							onChange={handleProgressChange}
+							className="w-1/2 mx-2"
+							onMouseDown={handleThumbMouseDown}
+							onMouseUp={handleThumbMouseUp}
+						/>
+						<span className='text-gray-700 block w-7 text-exsm'>{formatDisplayTime(Math.round(duration))}</span>
+					</div>
 				</div>
 				<div className="relative ml-4 hidden lg:block">
 					<button onClick={() => setShowVolumeTooltip(!showVolumeTooltip)}>
 						{renderVolumeIcon()}
 					</button>
 					{showVolumeTooltip && (
-						<div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-white p-2 rounded">
+						<div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 -translate-y-full bg-white p-2 rounded -rotate-90">
 							<input
 								type="range"
 								min="0"
@@ -133,7 +158,7 @@ export default function MusicCard({
 								step="0.01"
 								value={volume}
 								onChange={handleVolumeChange}
-								className="w-20"
+								className="w-20 relative"
 							/>
 						</div>
 					)}
@@ -142,6 +167,7 @@ export default function MusicCard({
 			<audio
 				ref={audioRef}
 				src={audioSrc}
+				onLoadedMetadata={handleLoadedMetadata}
 				onTimeUpdate={handleTimeUpdate}
 				preload="metadata"
 			></audio>
