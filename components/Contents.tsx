@@ -123,10 +123,9 @@ export default function Contents({ dic }: ContentsProps) {
 							artwork={songInfos[selectedIndex].imgUrl}
 							audioSrc={songInfos[selectedIndex].src}
 						/>
-						<span>候補</span>
-						<div className='w-full flex space-x-3'>
+						<div className='w-full max-w-md mt-3 flex space-x-3 border-solid border-2 border-white  rounded-lg p-2'>
 							{songInfos.map(((song, i) => (
-								<button key={i} className="overflow-hidden rounded-md" onClick={() => setSelectedIndex(i)}>
+								<button key={i} className={`overflow-hidden rounded-md border-blue-500 border-solid ${i === selectedIndex && "border-2"}`} onClick={() => setSelectedIndex(i)}>
 									<Image width={100} height={100} src={song.imgUrl} alt={song.title} />
 								</button>
 							)))}

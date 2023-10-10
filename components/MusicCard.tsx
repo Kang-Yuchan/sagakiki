@@ -112,6 +112,12 @@ export default function MusicCard({
 		return <Volume1 />;
 	};
 
+	useEffect(() => {
+		if (audioRef.current && audioRef.current.readyState === 0) {
+			setPlaying(false);
+		}
+	}, [audioSrc]);
+
 	return (
 		<div className="bg-white max-w-md mx-auto rounded-xl overflow-hidden shadow-lg relative mt-5">
 			<Image
@@ -128,8 +134,8 @@ export default function MusicCard({
 			</div>
 			<div className="px-6 py-4 flex justify-between">
 				<div className="w-full flex items-center">
-					<button onClick={togglePlay}>{playing ? <Pause /> : <Play />}</button>
-					<button onClick={() => setLoop(!loop)} className="mx-4">
+					<button onClick={togglePlay} className='focus:outline-none bg-transparent'>{playing ? <Pause /> : <Play />}</button>
+					<button onClick={() => setLoop(!loop)} className="mx-4 focus:outline-none">
 						{loop ? <RefreshCw /> : <RefreshCwOff />}
 					</button>
 					<div className='w-full flex items-center'>
@@ -146,7 +152,7 @@ export default function MusicCard({
 					</div>
 				</div>
 				<div className="relative ml-4 hidden lg:block">
-					<button onClick={() => setShowVolumeTooltip(!showVolumeTooltip)}>
+					<button className='focus:outline-none' onClick={() => setShowVolumeTooltip(!showVolumeTooltip)}>
 						{renderVolumeIcon()}
 					</button>
 					{showVolumeTooltip && (
