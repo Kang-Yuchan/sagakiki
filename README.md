@@ -9,6 +9,7 @@
 ## Tech Stacks
 
     - Next.js
-    - tailwind.css
+    - tailwind css
     - shadcn/ui
     - Shazam API
+    - Youtube Data API v3
