@@ -26,6 +26,7 @@ export default function Contents({ dic }: ContentsProps) {
 	const [isSearched, setIsSearched] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [selectedIndex, setSelectedIndex] = useState<number>(0);
+	const [error, setError] = useState<string>("");
 
 	const pathname = usePathname();
 	const router = useRouter();
@@ -46,6 +47,7 @@ export default function Contents({ dic }: ContentsProps) {
 	const handleSubmit = async () => {
 		try {
 			setIsLoading(true);
+			setError("");
 			router.push(`${pathname}?q=${input}`);
 			const res = await axios.get('/api/search/', {
 				params: { term: input },
@@ -73,6 +75,9 @@ export default function Contents({ dic }: ContentsProps) {
 		} catch (error) {
 			setIsLoading(false);
 			console.log(error);
+			if (axios.isAxiosError(error) && error.response && (error.response.status === 429 || error.response.status === 500)) {
+				setError(dic.apiRequestError);
+			}
 		}
 		setIsSearched(true);
 	}
@@ -92,7 +97,7 @@ export default function Contents({ dic }: ContentsProps) {
 			setIsSearched(false);
 		};
 	}, []);
-
+	console.log(error);
 	return (
 		<>
 			<div className="flex justify-center w-full">
@@ -114,7 +119,7 @@ export default function Contents({ dic }: ContentsProps) {
 					{!isLoading && dic.search}
 				</Button>
 			</div>
-			{isSearched && (
+			{(isSearched && !error) && (
 				songInfos.length > 0 ? (
 					<div className='flex flex-col items-center'>
 						<MusicCard

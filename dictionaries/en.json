@@ -2,5 +2,6 @@
 	"title": "SAGAKIKI! | Let's search and listen to a music by lyrics.",
 	"description": "SAGAKIKI! is a website where you can search for music by lyrics and listen to the music",
 	"placeholder": "Please enter lyrics or title",
-	"search": "search"
+	"search": "search",
+	"apiRequestError": "Too many requests! please wait!"
 }

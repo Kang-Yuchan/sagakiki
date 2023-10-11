@@ -2,10 +2,9 @@ import type { Locale } from '../i18n.config';
 export type Dictionary = {
 	title: string;
 	description: string;
-	artist: string;
-	musicTitle: string;
 	placeholder: string;
 	search: string;
+	apiRequestError: string;
 };
 
 type Dictionaries = {
