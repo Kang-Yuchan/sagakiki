@@ -29,7 +29,7 @@ export default async function Home({ params: { lang } }: PageParamsType) {
 
 	return (
 		<main
-			className="flex min-h-screen flex-col items-center pt-10 lg:pt-24 px-10"
+			className="flex min-h-screen flex-col items-center py-10 lg:pt-24 px-10"
 			style={{ backgroundColor: '#24222A' }}
 		>
 			<Contents dic={dic} />

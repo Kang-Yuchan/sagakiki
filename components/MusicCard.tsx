@@ -1,6 +1,7 @@
 'use client';
 
 import { formatDisplayTime } from '@/lib/format';
+import axios from 'axios';
 import {
 	VolumeX,
 	Volume1,
@@ -9,6 +10,7 @@ import {
 	Play,
 	RefreshCw,
 	RefreshCwOff,
+	Youtube,
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
@@ -18,6 +20,7 @@ type MusicCardProps = {
 	artist: string;
 	artwork: string;
 	audioSrc: string;
+	isMobile: boolean;
 };
 
 export default function MusicCard({
@@ -25,6 +28,7 @@ export default function MusicCard({
 	artist,
 	artwork,
 	audioSrc,
+	isMobile,
 }: MusicCardProps) {
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [progress, setProgress] = useState<number>(0);
@@ -98,6 +102,26 @@ export default function MusicCard({
 		}
 	};
 
+	const handleClickYoutube = async () => {
+		try {
+			const res = await axios.get('/api/youtube/', {
+				params: { songTitle: title, artistName: artist },
+			});
+			const { data } = res;
+			const videoId = data;
+
+			if (isMobile) {
+				// モバイルの場合、YouTubeアプリのディープリンクを使用
+				window.location.href = `vnd.youtube://${videoId}`;
+			} else {
+				// PCの場合、通常のYouTubeのウェブリンクを使用
+				window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+			}
+		} catch (error) {
+
+		}
+	}
+
 	useEffect(() => {
 		const audio = audioRef.current;
 		if (audio) {
@@ -129,7 +153,12 @@ export default function MusicCard({
 				alt={title}
 			/>
 			<div className="px-6 py-4">
-				<div className="font-bold text-xl mb-2">{title}</div>
+				<div className="mb-2 flex justify-between">
+					<span className='font-bold text-xl'>{title}</span>
+					<button type='button' className="bg-transparent focus:outline-none" onClick={handleClickYoutube}>
+						<Youtube />
+					</button>
+				</div>
 				<p className="text-gray-700 text-base">{artist}</p>
 			</div>
 			<div className="px-6 py-4 flex justify-between">

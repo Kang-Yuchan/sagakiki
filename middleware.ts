@@ -19,7 +19,6 @@ function getLocale(request: NextRequest): string | undefined {
 
 export function middleware(request: NextRequest) {
 	const acceptLanguage = request.headers.get('accept-language');
-	console.log(acceptLanguage);
 	const pathname = request.nextUrl.pathname;
 	const pathnameIsMissingLocale = i18n.locales.every(
 		(locale) =>

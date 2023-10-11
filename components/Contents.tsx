@@ -3,6 +3,7 @@
 import axios from 'axios';
 import Image from 'next/image';
 import React, { type ChangeEvent, useState, useEffect } from 'react';
+import UAParser from 'ua-parser-js';
 import type { Dictionary } from '@/lib/dictionary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ export default function Contents({ dic }: ContentsProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [selectedIndex, setSelectedIndex] = useState<number>(0);
 	const [error, setError] = useState<string>("");
+	const [isMobile, setIsMobile] = useState<boolean>(false);
 
 	const pathname = usePathname();
 	const router = useRouter();
@@ -94,11 +96,20 @@ export default function Contents({ dic }: ContentsProps) {
 
 	useEffect(() => {
 		if (error) {
-			const errorAlert = alert(error);
+			alert(error);
 			setError('');
-			console.log(errorAlert);
 		}
 	}, [error]);
+
+	useEffect(() => {
+		// ユーザーエージェントを解析してデバイスタイプを取得
+		const parser = new UAParser();
+		const result = parser.getResult();
+		const deviceType = result.device && result.device.type;
+
+		// モバイルデバイスかどうかを判断
+		setIsMobile(deviceType === 'mobile' || deviceType === 'tablet');
+	}, []);
 
 	return (
 		<>
@@ -129,6 +140,7 @@ export default function Contents({ dic }: ContentsProps) {
 							artist={songInfos[selectedIndex].artist}
 							artwork={songInfos[selectedIndex].imgUrl}
 							audioSrc={songInfos[selectedIndex].src}
+							isMobile={isMobile}
 						/>
 						<div className='w-full max-w-md mt-3 flex space-x-3 border-solid border-2 border-white  rounded-lg p-2'>
 							{songInfos.map(((song, i) => (
