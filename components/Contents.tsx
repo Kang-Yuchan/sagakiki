@@ -74,9 +74,12 @@ export default function Contents({ dic }: ContentsProps) {
 			setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
-			console.log(error);
-			if (axios.isAxiosError(error) && error.response && (error.response.status === 429 || error.response.status === 500)) {
-				setError(dic.apiRequestError);
+			if (axios.isAxiosError(error) && error.response) {
+				if (error.response.status === 429) {
+					setError(dic.apiRequestError);
+				} else {
+					setError(error.message);
+				}
 			}
 		}
 		setIsSearched(true);
@@ -87,17 +90,16 @@ export default function Contents({ dic }: ContentsProps) {
 		if (searchQuery) {
 			setInput(searchQuery);
 		}
-	}, [])
+	}, []);
 
 	useEffect(() => {
-		return () => {
-			setSongInfos([]);
-			setIsLoading(false);
-			setInput('');
-			setIsSearched(false);
-		};
-	}, []);
-	console.log(error);
+		if (error) {
+			const errorAlert = alert(error);
+			setError('');
+			console.log(errorAlert);
+		}
+	}, [error]);
+
 	return (
 		<>
 			<div className="flex justify-center w-full">
