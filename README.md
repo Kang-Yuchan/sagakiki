@@ -8,8 +8,9 @@
 
 ## Tech Stacks
 
-    - Next.js
-    - tailwind css
-    - shadcn/ui
-    - Shazam API
-    - Youtube Data API v3
+    - Next.js: react framework for product build
+    - tailwind css: utility css
+    - shadcn/ui: ui component build with tailwind css
+    - Shazam API: search music by lyrics
+    - Youtube Data API v3: search youtube video id as music title and artist
+    - upstash redis: cache api
