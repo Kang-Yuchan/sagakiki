@@ -11,15 +11,15 @@ import { Loader2 } from 'lucide-react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import NoResultsImage from '@/public/no-results.jpg';
 import MusicCard from './MusicCard';
+import type { SongInfo } from '@/app/api/search/route';
 
-type ContentsProps = { dic: Dictionary };
-
-type SongInfo = {
+export type YoutubeVideo = {
 	artist: string;
 	title: string;
-	imgUrl: string;
-	src: string;
-};
+	videoId: string;
+}
+
+type ContentsProps = { dic: Dictionary };
 
 export default function Contents({ dic }: ContentsProps) {
 	const [input, setInput] = useState('');
@@ -29,6 +29,7 @@ export default function Contents({ dic }: ContentsProps) {
 	const [selectedIndex, setSelectedIndex] = useState<number>(0);
 	const [error, setError] = useState<string>("");
 	const [isMobile, setIsMobile] = useState<boolean>(false);
+	const [youtubeVideos, setYoutubeVideos] = useState<YoutubeVideo[]>([]);
 
 	const pathname = usePathname();
 	const router = useRouter();
@@ -50,29 +51,13 @@ export default function Contents({ dic }: ContentsProps) {
 		try {
 			setIsLoading(true);
 			setError("");
+			setYoutubeVideos([]);
 			router.push(`${pathname}?q=${input}`);
 			const res = await axios.get('/api/search/', {
 				params: { term: input },
 			});
 			const { data } = res;
-
-			if ('tracks' in data) {
-				const hits: SongInfo[] = (data.tracks.hits as any[]).map(
-					({ track }) => {
-						return {
-							artist: track.subtitle,
-							title: track.title,
-							imgUrl: track.images.background,
-							src: track.hub.actions[1]?.uri,
-						};
-					},
-				).filter((item, index, array) => {
-					return index === array.findIndex(({ artist }) => artist === item.artist);
-				});
-				setSongInfos(hits);
-			} else {
-				setSongInfos([]);
-			}
+			setSongInfos(data);
 			setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
@@ -141,6 +126,8 @@ export default function Contents({ dic }: ContentsProps) {
 							artwork={songInfos[selectedIndex].imgUrl}
 							audioSrc={songInfos[selectedIndex].src}
 							isMobile={isMobile}
+							youtubeVideos={youtubeVideos}
+							setYoutubeVidoes={setYoutubeVideos}
 						/>
 						<div className='w-full max-w-md mt-3 flex space-x-3 border-solid border-2 border-white  rounded-lg p-2'>
 							{songInfos.map(((song, i) => (

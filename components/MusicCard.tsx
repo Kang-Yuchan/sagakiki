@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
+import { YoutubeVideo } from './Contents';
 
 type MusicCardProps = {
 	title: string;
@@ -21,7 +22,28 @@ type MusicCardProps = {
 	artwork: string;
 	audioSrc: string;
 	isMobile: boolean;
+	youtubeVideos: YoutubeVideo[];
+	setYoutubeVidoes: React.Dispatch<React.SetStateAction<YoutubeVideo[]>>;
 };
+
+const handleLinkToYoutubeAsDevice = (isMobile: boolean, videoId: string) => {
+	if (isMobile) {
+		// モバイルの場合、YouTubeアプリのディープリンクを使用
+		window.location.href = `vnd.youtube://${videoId}`;
+	} else {
+		// PCの場合、通常のYouTubeのウェブリンクを使用
+		window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+	}
+}
+
+// すでに取得してるyoutube動画ならそのオブジェクトを返す、ないならundefined
+const findYoutubeVideo = (videos: YoutubeVideo[], artist: string, title: string) => {
+	const foundedVideo = videos.find((video) =>
+		video.artist === artist && video.title === title
+	);
+	return foundedVideo;
+};
+
 
 export default function MusicCard({
 	title,
@@ -29,6 +51,8 @@ export default function MusicCard({
 	artwork,
 	audioSrc,
 	isMobile,
+	youtubeVideos,
+	setYoutubeVidoes
 }: MusicCardProps) {
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [progress, setProgress] = useState<number>(0);
@@ -103,22 +127,23 @@ export default function MusicCard({
 	};
 
 	const handleClickYoutube = async () => {
-		try {
-			const res = await axios.get('/api/youtube/', {
-				params: { songTitle: title, artistName: artist },
-			});
-			const { data } = res;
-			const videoId = data;
+		// すでに取得した同じ曲を再びapiを呼び出して無駄な呼出しにならないようにするため
+		const youtubeVideo = findYoutubeVideo(youtubeVideos, artist, title);
+		if (youtubeVideo) {
+			handleLinkToYoutubeAsDevice(isMobile, youtubeVideo.videoId)
+		} else {
+			try {
+				const res = await axios.get('/api/youtube/', {
+					params: { songTitle: title, artistName: artist },
+				});
 
-			if (isMobile) {
-				// モバイルの場合、YouTubeアプリのディープリンクを使用
-				window.location.href = `vnd.youtube://${videoId}`;
-			} else {
-				// PCの場合、通常のYouTubeのウェブリンクを使用
-				window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+				const { data } = res;
+				const videoId: string = data;
+				handleLinkToYoutubeAsDevice(isMobile, videoId);
+				setYoutubeVidoes([...youtubeVideos, { artist, title, videoId }]);
+			} catch (error) {
+				console.log(error);
 			}
-		} catch (error) {
-
 		}
 	}
 
