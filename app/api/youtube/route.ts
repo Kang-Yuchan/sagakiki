@@ -1,6 +1,7 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import axios from "axios";
+import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
 const ratelimit = new Ratelimit({
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
     const artistName = req.nextUrl.searchParams.get('artistName');
     const searchQuery = `${songTitle} ${artistName} official`;
     const apiUrl = process.env.YOTUBE_DATA_API_URL || "";
-    const token = req.cookies.get("user-token")?.value || "127.0.0.1";
+    const token = req.cookies.get("sagakiki-token")?.value || "127.0.0.1";
 
     const { success, reset } = await ratelimit.limit(token);
 

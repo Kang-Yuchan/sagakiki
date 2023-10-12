@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Locale } from '../../i18n.config';
 import { getDictionary } from '../../lib/dictionary';
 import Contents from '../../components/Contents';
-import { setToken } from '@/lib/token';
 
 type PageParamsType = { params: { lang: Locale } };
 
@@ -27,8 +26,7 @@ export async function generateMetadata({
 
 export default async function Home({ params: { lang } }: PageParamsType) {
 	const dic = await getDictionary(lang);
-	const token = setToken();
-	console.log(token)
+
 	return (
 		<main
 			className="flex min-h-screen flex-col items-center py-10 lg:pt-24 px-10"

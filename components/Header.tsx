@@ -8,7 +8,9 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { LOCALES_ARRAY, type Locale } from '@/i18n.config';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 type HeaderProps = { lang: Locale };
 
@@ -17,6 +19,12 @@ export default function Header({ lang }: HeaderProps) {
 
 	const handleSelectChangeLocale = (locale: string) =>
 		router.push(`/${locale}`);
+
+	const checkCookie = async () => await axios.post("/api/cookie");
+
+	useEffect(() => {
+		checkCookie();
+	}, [])
 
 	return (
 		<header>

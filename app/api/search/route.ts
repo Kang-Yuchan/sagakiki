@@ -18,7 +18,7 @@ const ratelimit = new Ratelimit({
 
 export async function GET(req: NextRequest) {
 	const term = req.nextUrl.searchParams.get('term');
-	const token = req.cookies.get("user-token")?.value || "127.0.0.1";
+	const token = req.cookies.get("sagakiki-token")?.value || "127.0.0.1";
 
 	const { success, reset } = await ratelimit.limit(token);
 
