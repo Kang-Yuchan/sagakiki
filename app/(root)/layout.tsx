@@ -1,16 +1,32 @@
-import { Locale } from '@/i18n.config';
-import RootLayout from '../[lang]/layout'
+import '../[lang]/globals.css';
+import Header from "@/components/Header";
+import { Metadata } from "next";
+import { Inter } from "next/font/google";
+import Script from "next/script";
+import { metadata as LangMetaData } from '../[lang]/layout';
 
-type DefaultRootLayoutProps = Omit<{
+const inter = Inter({ subsets: ['latin'] });
+
+
+export const metadata: Metadata = LangMetaData;
+
+export default function RootLayout({
+    children
+}: {
     children: React.ReactNode;
-    params: { lang: Locale };
-}, 'params'>
-
-export default function DefaultIndexPage({ children }: DefaultRootLayoutProps) {
-    return RootLayout({
-        params: {
-            lang: "en",
-        },
-        children,
-    })
+}) {
+    return (
+        <html lang="en">
+            <head>
+                {process.env.NODE_ENV === "production" && (
+                    <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2659609409731056"
+                        crossOrigin="anonymous" />
+                )}
+            </head>
+            <body className={inter.className} suppressHydrationWarning={true}>
+                <Header lang="en" />
+                {children}
+            </body>
+        </html>
+    );
 }
