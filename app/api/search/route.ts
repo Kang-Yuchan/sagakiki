@@ -18,10 +18,9 @@ const ratelimit = new Ratelimit({
 
 export async function GET(req: NextRequest) {
 	const term = req.nextUrl.searchParams.get('term');
-	// const geoIp = await axios.get(process.env.GEO_API_URL || ""); /* geo apiを取得しない方向に実装すること */
-	const ip = req.ip || req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || "192.023.020";
+	const token = req.cookies.get("user-token")?.value || "127.0.0.1";
 
-	const { success, reset } = await ratelimit.limit(ip);
+	const { success, reset } = await ratelimit.limit(token);
 
 	if (!success) {
 		const now = Date.now();
