@@ -1,4 +1,5 @@
 import './globals.css';
+import Script from 'next/script';
 import Favicon from '../favicon.ico';
 import AppleIcon from "@/public/apple-touch-icon.png";
 import type { Metadata } from 'next';
@@ -40,6 +41,12 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang={lang}>
+			<head>
+				{process.env.NODE_ENV === "production" && (
+					<Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2659609409731056"
+						crossOrigin="anonymous" />
+				)}
+			</head>
 			<body className={inter.className} suppressHydrationWarning={true}>
 				<Header lang={lang} />
 				{children}
