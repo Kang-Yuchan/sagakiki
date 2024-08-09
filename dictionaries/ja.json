@@ -1,7 +1,7 @@
 {
-	"title": "SAGAKIKI! | 歌詞で曲を探して聞いてみる！",
-	"description": "SAGAKIKI!は歌詞で曲を探して、曲を聞けるウェブサイトです。",
-	"placeholder": "歌詞や曲名を入力してください",
-	"search": "検索",
-	"apiRequestError": "サーバーへのリクエストがとても多いです！しばらくお待ちください！"
+  "title": "SAGAKIKI! | 歌詞で曲を探して聞いてみる！",
+  "description": "SAGAKIKI!は歌詞で曲を探して、曲を聞けるウェブサイトです。",
+  "placeholder": "歌詞や曲名を入力してください",
+  "search": "検索",
+  "apiRequestError": "サーバーへのリクエストがとても多いです！しばらくお待ちください！"
 }

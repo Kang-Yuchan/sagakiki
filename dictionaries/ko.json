@@ -1,7 +1,7 @@
 {
-	"title": "SAGAKIKI! | 가사로 노래를 찾고 들어보자!",
-	"description": "SAGAKIKI!는 가사를 통해서 노래를 찾아주고 들어볼수있는 웹사이트입니다.",
-	"placeholder": "가사나 곡명을 입력해주세요",
-	"search": "검색",
-	"apiRequestError": "서버로 요청이 너무 많습니다! 잠시만 기다린뒤 다시 검색해주세요!"
+  "title": "SAGAKIKI! | 가사로 노래를 찾고 들어보자!",
+  "description": "SAGAKIKI!는 가사를 통해서 노래를 찾아주고 들어볼수있는 웹사이트입니다.",
+  "placeholder": "가사나 곡명을 입력해주세요",
+  "search": "검색",
+  "apiRequestError": "서버로 요청이 너무 많습니다! 잠시만 기다린뒤 다시 검색해주세요!"
 }
